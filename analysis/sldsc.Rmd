@@ -1,0 +1,156 @@
+---
+title: "**S-LDSC analysis to estimate the enrichment of GWAS variants in human cell m6A peaks**"
+author: "Christie Du"
+date: "2020-08-06"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+## Introduction
+
+I ran S-LDSC and on m6A annotations of 3 cell types: MOLM13, MONO-MAC-6, and NOMO-1. I did this for 11 GWAS: Asthma, BMI, CAD, HDL, Height, Intelligence, IBD, LDL, RA, Schizophrenia, and Type II Diabetes. M6A annotations used are from here: https://repicmod.uchicago.edu/repic/download.php.
+
+## **S-LDSC**
+
+For S-LDSC, I used baselineLD model v1.1: 
+
+1. BaselineLD v1.1 located here:
+`RCC:/project2/xinhe/kevinluo/ldsc/LDSCORE/1000G_Phase3_baselineLD_v1.1_ldscores`
+
+### GWAS and m6A annotations:
+* GWAS summary statistics in the sumstats format (excluding Intelligence) are located at `RCC:/project2/xinhe/kevinluo/GWAS/GWAS_summary_stats/GWAS_collection/ldsc_format` 
+* Intelligence GWAS in the sumstats format is located at `RCC:/project2/xinhe/kevinluo/GWAS/GWAS_summary_stats/GWAS_from_Min/ldsc_format` 
+* The original m6A annotations are located at `RCC:/project2/xinhe/cdu/ldsc/annot/m6A_immune_cells/RAW` 
+
+Because the GWAS summary statistics were based on the hg19 map, the m6A annotations were converted from hg38 to hg19 using `liftOver`. The final BED files are located here: `RCC:/project2/xinhe/cdu/ldsc/annot/m6A_immune_cells/hg19`.
+
+```{r annotations and traits}
+annot_list <- c("MOLM13", "MONO-MAC-6", "NOMO-1")
+trait_name_list <- c("Asthma", "BMI","CAD","HDL","Height","IBD","Intelligence","LDL","RA","Schizophrenia","T2D")
+```
+
+
+```{r plot functions}
+library(ggplot2)
+library(foreach)
+library(doParallel)
+
+ggplot_enrichment <- function(result_sLDSC, xlim = NULL, title = "Enrichment"){
+  
+  Enrichment <- result_sLDSC$Enrichment
+  Enrichment_CI_L <- result_sLDSC$Enrichment - 1.96*result_sLDSC$Enrichment_std_error
+  Enrichment_CI_H <- result_sLDSC$Enrichment + 1.96*result_sLDSC$Enrichment_std_error
+
+  ## truncate at 1
+  Enrichment[Enrichment < 1] <- 1
+  Enrichment_CI_L[Enrichment_CI_L < 1] <- 1
+  Enrichment_CI_H[Enrichment_CI_H < 1] <- 1
+  
+  p <- ggplot(result_sLDSC, aes(x = Enrichment, y = Category, colour = Color))+
+    geom_point()+
+    xlab("Enrichment")+
+    ggtitle(title)+
+    geom_errorbarh(aes(xmin = Enrichment - 1.96*Enrichment_std_error, 
+                       xmax = Enrichment + 1.96*Enrichment_std_error, height = 0.1))+ 
+    facet_wrap(Disease~.,ncol = 3)+
+    theme_bw()  + 
+    geom_vline(xintercept = 1,linetype="dotted", colour = "red")+
+    theme(axis.ticks = element_blank(),  
+          panel.grid.minor = element_blank(), 
+          axis.line = element_line(colour = "black"), 
+          axis.text = element_text(face="bold",size = 10, colour = "black"),
+          axis.title = element_text(face="bold",size = 10),
+          strip.text = element_text(face="bold",size = 10), 
+          panel.spacing.x = unit(0.6,units = "cm"), 
+          axis.title.y = element_blank(), 
+          legend.position = "none", 
+          plot.title = element_text(hjust = 0.5))
+  if(!is.null(xlim)){
+    p <- p + coord_cartesian(xlim = xlim)
+  }
+  print(p)
+}
+
+ggplot_log2_enrichment <- function(result_sLDSC, xlim = NULL, title = "Enrichment"){
+  
+  result_sLDSC$Enrichment_CI_L <- result_sLDSC$Enrichment - 1.96*result_sLDSC$Enrichment_std_error
+  result_sLDSC$Enrichment_CI_H <- result_sLDSC$Enrichment + 1.96*result_sLDSC$Enrichment_std_error
+
+  ## truncate at 1
+  result_sLDSC$Enrichment[result_sLDSC$Enrichment < 1] <- 1
+  result_sLDSC$Enrichment_CI_L[result_sLDSC$Enrichment_CI_L < 1] <- 1
+  result_sLDSC$Enrichment_CI_H[result_sLDSC$Enrichment_CI_H < 1] <- 1
+
+  p <- ggplot(result_sLDSC, aes(x = log2(Enrichment), y = Category, colour = Color))+
+    geom_point()+
+    xlab("log2(Enrichment)")+
+    ggtitle(title)+
+    geom_errorbarh(aes(xmin = log2(Enrichment_CI_L), 
+                       xmax = log2(Enrichment_CI_H), height = 0.1))+ 
+    facet_wrap(Disease~.,ncol = 3)+
+    theme_bw()  + 
+    geom_vline(xintercept = 0,linetype="dotted", colour = "red")+
+    theme(axis.ticks = element_blank(),  
+          panel.grid.minor = element_blank(), 
+          axis.line = element_line(colour = "black"), 
+          axis.text = element_text(face="bold",size = 10, colour = "black"),
+          axis.title = element_text(face="bold",size = 10),
+          strip.text = element_text(face="bold",size = 10), 
+          panel.spacing.x = unit(0.6,units = "cm"), 
+          axis.title.y = element_blank(), 
+          legend.position = "none", 
+          plot.title = element_text(hjust = 0.5))
+  if(!is.null(xlim)){
+    p <- p + coord_cartesian(xlim = xlim)
+  }
+  print(p)
+}
+
+## combine S-LDSC enrichment results across traits
+combine_sldsc_traits <- function(trait_name_list, dir_results, baseline){
+  registerDoParallel(cores = 6)
+  
+  result_sLDSC <- foreach(trait = trait_name_list, .combine = rbind)%dopar%{
+    sldsc_results <- read.table(paste0(dir_results,"/", trait, "/", baseline, "/", trait,"_", "MOLM13", "_hg19_", baseline, ".results"), header = T, stringsAsFactors = F)
+    sldsc.MOLM13 <- sldsc_results[sldsc_results$Category == "L2_1",]
+    sldsc.MOLM13$Category <- "MOLM13"
+    
+    sldsc_results <- read.table(paste0(dir_results,"/", trait, "/", baseline, "/", trait,"_", "MONO-MAC-6", "_hg19_", baseline, ".results"), header = T, stringsAsFactors = F)
+    sldsc.MONOMAC6 <- sldsc_results[sldsc_results$Category == "L2_1",]
+    sldsc.MONOMAC6$Category <- "MONO-MAC-6"
+    
+    sldsc_results <- read.table(paste0(dir_results,"/", trait, "/", baseline, "/", trait,"_", "NOMO-1", "_hg19_", baseline, ".results"), header = T, stringsAsFactors = F)
+    sldsc.NOMO1 <- sldsc_results[sldsc_results$Category == "L2_1",]
+    sldsc.NOMO1$Category <- "NOMO-1"
+    
+    sldsc.combined <- rbind(sldsc.MOLM13, sldsc.MONOMAC6, sldsc.NOMO1)
+    sldsc.combined <- cbind(Disease = trait, sldsc.combined)
+    sldsc.combined
+  }
+  return(result_sLDSC)
+}
+```
+
+
+```{r v1.1 data import}
+baseline <- "baselineLDv1.1"
+
+dir_results <- "/project2/xinhe/cdu/ldsc/results/immune_cells"
+result_sLDSC <- combine_sldsc_traits(trait_name_list, dir_results, baseline)
+
+result_sLDSC$Category <- factor(result_sLDSC$Category, levels = rev(annot_list) )
+result_sLDSC$Color <- factor(result_sLDSC$Category, levels = annot_list)
+```
+
+
+```{r data table}
+DT::datatable(format(result_sLDSC[,1:8], digits = 2), options = list(scrollX = TRUE, keys = TRUE, pageLength = length(annot_list)),rownames = F)
+```
+
+
+```{r plots}
+ggplot_enrichment(result_sLDSC, title = "")
+ggplot_log2_enrichment(result_sLDSC, title = "")
+```
+

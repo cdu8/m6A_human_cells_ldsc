@@ -8,4 +8,6 @@ editor_options:
   chunk_output_type: console
 ---
 
-Welcome to my research website.
+I ran S-LDSC and on m6A annotations of 3 cell types: MOLM13, MONO-MAC-6, and NOMO-1. I did this for 11 GWAS: Asthma, BMI, CAD, HDL, Height, Intelligence, IBD, LDL, RA, Schizophrenia, and Type II Diabetes. M6A annotations used are from here: https://repicmod.uchicago.edu/repic/download.php.
+
+[S-LDSC](sldsc.html)
