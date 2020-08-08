@@ -132,6 +132,31 @@ combine_sldsc_traits <- function(trait_name_list, dir_results, baseline){
 }
 ```
 
+### Modified baseline model
+
+```{r modified data import}
+baseline <- "baseline_gene_MAF_LD"
+
+dir_results <- "/project2/xinhe/cdu/ldsc/results/immune_cells"
+result_sLDSC <- combine_sldsc_traits(trait_name_list, dir_results, baseline)
+
+result_sLDSC$Category <- factor(result_sLDSC$Category, levels = rev(annot_list) )
+result_sLDSC$Color <- factor(result_sLDSC$Category, levels = annot_list)
+```
+
+
+```{r modified data table}
+DT::datatable(format(result_sLDSC[,1:8], digits = 2), options = list(scrollX = TRUE, keys = TRUE, pageLength = length(annot_list)),rownames = F,
+              caption = 'Table 1. Modified baseline model')
+```
+
+
+```{r modified plots}
+ggplot_enrichment(result_sLDSC, title = "")
+ggplot_log2_enrichment(result_sLDSC, title = "")
+```
+
+### Baseline V1.1
 
 ```{r v1.1 data import}
 baseline <- "baselineLDv1.1"
@@ -145,7 +170,8 @@ result_sLDSC$Color <- factor(result_sLDSC$Category, levels = annot_list)
 
 
 ```{r data table}
-DT::datatable(format(result_sLDSC[,1:8], digits = 2), options = list(scrollX = TRUE, keys = TRUE, pageLength = length(annot_list)),rownames = F)
+DT::datatable(format(result_sLDSC[,1:8], digits = 2), options = list(scrollX = TRUE, keys = TRUE, pageLength = length(annot_list)),rownames = F,
+              caption = 'Table 2. BaselineLD v1.1')
 ```
 
 
