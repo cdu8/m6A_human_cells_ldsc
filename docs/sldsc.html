@@ -35,6 +35,9 @@
 <script src="site_libs/dt-core-1.10.16/js/jquery.dataTables.min.js"></script>
 <link href="site_libs/crosstalk-1.0.0/css/crosstalk.css" rel="stylesheet" />
 <script src="site_libs/crosstalk-1.0.0/js/crosstalk.min.js"></script>
+<link href="site_libs/font-awesome-5.0.13/css/fa-svg-with-js.css" rel="stylesheet" />
+<script src="site_libs/font-awesome-5.0.13/js/fontawesome-all.min.js"></script>
+<script src="site_libs/font-awesome-5.0.13/js/fa-v4-shims.min.js"></script>
 
 <link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/master/img/reproducible.png">
 <!-- Add a small amount of space between sections. -->
@@ -307,7 +310,13 @@ div.tocify {
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/cdu8/m6A_human_cells_ldsc">
+    <span class="fa fa-github"></span>
+     
+    Source code
+  </a>
+</li>
       </ul>
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
@@ -344,7 +353,7 @@ div.tocify {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2020-08-06
+<strong>Last updated:</strong> 2020-08-07
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -435,16 +444,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrong28ab9c8"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> 28ab9c8 </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomcdu8m6Ahumancellsldsctree7864b50d238661211773eccecd616d15f1a268fetargetblank7864b50a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/cdu8/m6A_human_cells_ldsc/tree/7864b50d238661211773eccecd616d15f1a268fe" target="_blank">7864b50</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrong28ab9c8" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomcdu8m6Ahumancellsldsctree7864b50d238661211773eccecd616d15f1a268fetargetblank7864b50a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version 28ab9c8. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/cdu8/m6A_human_cells_ldsc/tree/7864b50d238661211773eccecd616d15f1a268fe" target="_blank">7864b50</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -495,7 +504,41 @@ Message
 Rmd
 </td>
 <td>
-28ab9c8
+<a href="https://github.com/cdu8/m6A_human_cells_ldsc/blob/7864b50d238661211773eccecd616d15f1a268fe/analysis/sldsc.Rmd" target="_blank">7864b50</a>
+</td>
+<td>
+cdu8
+</td>
+<td>
+2020-08-07
+</td>
+<td>
+wflow_publish(c(“analysis/sldsc.Rmd”))
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/cdu8/m6A_human_cells_ldsc/bc407dd6317487c9155b6ac2b484086237ef3e91/docs/sldsc.html" target="_blank">bc407dd</a>
+</td>
+<td>
+cdu8
+</td>
+<td>
+2020-08-06
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/cdu8/m6A_human_cells_ldsc/blob/28ab9c862532b3109cf176c7ea0c96bb4612f023/analysis/sldsc.Rmd" target="_blank">28ab9c8</a>
 </td>
 <td>
 cdu8
@@ -633,6 +676,27 @@ combine_sldsc_traits &lt;- function(trait_name_list, dir_results, baseline){
   }
   return(result_sLDSC)
 }</code></pre>
+</div>
+<div id="modified-baseline-model" class="section level3">
+<h3>Modified baseline model</h3>
+<pre class="r"><code>baseline &lt;- &quot;baseline_gene_MAF_LD&quot;
+
+dir_results &lt;- &quot;/project2/xinhe/cdu/ldsc/results/immune_cells&quot;
+result_sLDSC &lt;- combine_sldsc_traits(trait_name_list, dir_results, baseline)
+
+result_sLDSC$Category &lt;- factor(result_sLDSC$Category, levels = rev(annot_list) )
+result_sLDSC$Color &lt;- factor(result_sLDSC$Category, levels = annot_list)</code></pre>
+<pre class="r"><code>DT::datatable(format(result_sLDSC[,1:8], digits = 2), options = list(scrollX = TRUE, keys = TRUE, pageLength = length(annot_list)),rownames = F,
+              caption = &#39;Table 1. Modified baseline model&#39;)</code></pre>
+<div id="htmlwidget-4fb0b791e402af03da7a" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-4fb0b791e402af03da7a">{"x":{"filter":"none","caption":"<caption>Table 1. Modified baseline model<\/caption>","data":[["Asthma","Asthma","Asthma","BMI","BMI","BMI","CAD","CAD","CAD","HDL","HDL","HDL","Height","Height","Height","IBD","IBD","IBD","Intelligence","Intelligence","Intelligence","LDL","LDL","LDL","RA","RA","RA","Schizophrenia","Schizophrenia","Schizophrenia","T2D","T2D","T2D"],["MOLM13","MONO-MAC-6","NOMO-1","MOLM13","MONO-MAC-6","NOMO-1","MOLM13","MONO-MAC-6","NOMO-1","MOLM13","MONO-MAC-6","NOMO-1","MOLM13","MONO-MAC-6","NOMO-1","MOLM13","MONO-MAC-6","NOMO-1","MOLM13","MONO-MAC-6","NOMO-1","MOLM13","MONO-MAC-6","NOMO-1","MOLM13","MONO-MAC-6","NOMO-1","MOLM13","MONO-MAC-6","NOMO-1","MOLM13","MONO-MAC-6","NOMO-1"],["0.0151","0.0113","0.0084","0.0151","0.0113","0.0084","0.0151","0.0113","0.0084","0.0151","0.0113","0.0084","0.0151","0.0113","0.0084","0.0151","0.0113","0.0084","0.0151","0.0113","0.0084","0.0151","0.0113","0.0084","0.0151","0.0113","0.0084","0.0151","0.0113","0.0084","0.0151","0.0113","0.0084"],["0.0277","0.0345","0.0239","0.0118","0.0410","0.0163","0.0374","0.0318","0.0370","0.0319","0.0828","0.0208","0.0359","0.0476","0.0395","0.0700","0.0643","0.0578","0.0164","0.0231","0.0210","0.0301","0.0587","0.0338","0.0466","0.0698","0.0499","0.0153","0.0111","0.0096","0.0542","0.0619","0.0082"],["0.0191","0.0228","0.0183","0.0056","0.0230","0.0047","0.0136","0.0139","0.0127","0.0103","0.0337","0.0076","0.0084","0.0080","0.0120","0.0218","0.0176","0.0199","0.0066","0.0053","0.0044","0.0121","0.0177","0.0121","0.0176","0.0242","0.0163","0.0072","0.0062","0.0051","0.0245","0.0486","0.0082"],["1.84","3.04","2.84","0.78","3.62","1.95","2.49","2.81","4.40","2.12","7.30","2.48","2.38","4.20","4.70","4.65","5.67","6.87","1.09","2.03","2.50","2.00","5.18","4.02","3.09","6.15","5.94","1.01","0.98","1.14","3.60","5.46","0.98"],["1.27","2.01","2.17","0.37","2.03","0.56","0.91","1.23","1.51","0.68","2.97","0.90","0.56","0.70","1.43","1.45","1.55","2.37","0.44","0.47","0.52","0.81","1.56","1.44","1.17","2.14","1.95","0.48","0.54","0.61","1.63","4.29","0.97"],["5.0e-01","3.1e-01","3.8e-01","5.6e-01","2.0e-01","9.1e-02","9.3e-02","1.4e-01","2.6e-02","1.1e-01","3.7e-02","9.6e-02","1.3e-02","1.3e-05","1.3e-02","1.2e-02","2.3e-03","1.3e-02","8.4e-01","2.8e-02","3.2e-03","2.2e-01","1.5e-02","4.3e-02","6.0e-02","1.4e-02","1.0e-02","9.8e-01","9.7e-01","8.2e-01","1.1e-01","3.0e-01","9.8e-01"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>Disease<\/th>\n      <th>Category<\/th>\n      <th>Prop._SNPs<\/th>\n      <th>Prop._h2<\/th>\n      <th>Prop._h2_std_error<\/th>\n      <th>Enrichment<\/th>\n      <th>Enrichment_std_error<\/th>\n      <th>Enrichment_p<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"scrollX":true,"keys":true,"pageLength":3,"order":[],"autoWidth":false,"orderClasses":false,"lengthMenu":[3,10,25,50,100]}},"evals":[],"jsHooks":[]}</script>
+<pre class="r"><code>ggplot_enrichment(result_sLDSC, title = &quot;&quot;)</code></pre>
+<p><img src="figure/sldsc.Rmd/modified%20plots-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggplot_log2_enrichment(result_sLDSC, title = &quot;&quot;)</code></pre>
+<p><img src="figure/sldsc.Rmd/modified%20plots-2.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="baseline-v1.1" class="section level3">
+<h3>Baseline V1.1</h3>
 <pre class="r"><code>baseline &lt;- &quot;baselineLDv1.1&quot;
 
 dir_results &lt;- &quot;/project2/xinhe/cdu/ldsc/results/immune_cells&quot;
@@ -640,13 +704,88 @@ result_sLDSC &lt;- combine_sldsc_traits(trait_name_list, dir_results, baseline)
 
 result_sLDSC$Category &lt;- factor(result_sLDSC$Category, levels = rev(annot_list) )
 result_sLDSC$Color &lt;- factor(result_sLDSC$Category, levels = annot_list)</code></pre>
-<pre class="r"><code>DT::datatable(format(result_sLDSC[,1:8], digits = 2), options = list(scrollX = TRUE, keys = TRUE, pageLength = length(annot_list)),rownames = F)</code></pre>
-<div id="htmlwidget-4fb0b791e402af03da7a" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-4fb0b791e402af03da7a">{"x":{"filter":"none","data":[["Asthma","Asthma","Asthma","BMI","BMI","BMI","CAD","CAD","CAD","HDL","HDL","HDL","Height","Height","Height","IBD","IBD","IBD","Intelligence","Intelligence","Intelligence","LDL","LDL","LDL","RA","RA","RA","Schizophrenia","Schizophrenia","Schizophrenia","T2D","T2D","T2D"],["MOLM13","MONO-MAC-6","NOMO-1","MOLM13","MONO-MAC-6","NOMO-1","MOLM13","MONO-MAC-6","NOMO-1","MOLM13","MONO-MAC-6","NOMO-1","MOLM13","MONO-MAC-6","NOMO-1","MOLM13","MONO-MAC-6","NOMO-1","MOLM13","MONO-MAC-6","NOMO-1","MOLM13","MONO-MAC-6","NOMO-1","MOLM13","MONO-MAC-6","NOMO-1","MOLM13","MONO-MAC-6","NOMO-1","MOLM13","MONO-MAC-6","NOMO-1"],["0.0151","0.0113","0.0084","0.0151","0.0113","0.0084","0.0151","0.0113","0.0084","0.0151","0.0113","0.0084","0.0151","0.0113","0.0084","0.0151","0.0113","0.0084","0.0151","0.0113","0.0084","0.0151","0.0113","0.0084","0.0151","0.0113","0.0084","0.0151","0.0113","0.0084","0.0151","0.0113","0.0084"],["0.0205","0.0269","0.0133","0.0189","0.0444","0.0177","0.0303","0.0250","0.0296","0.0310","0.0729","0.0139","0.0325","0.0431","0.0353","0.0564","0.0456","0.0423","0.0233","0.0251","0.0213","0.0255","0.0519","0.0295","0.0314","0.0507","0.0338","0.0213","0.0125","0.0093","0.0510","0.0552","0.0062"],["0.0165","0.0195","0.0180","0.0054","0.0229","0.0045","0.0120","0.0114","0.0109","0.0097","0.0303","0.0067","0.0076","0.0069","0.0106","0.0197","0.0144","0.0160","0.0065","0.0049","0.0041","0.0119","0.0163","0.0100","0.0137","0.0196","0.0130","0.0068","0.0056","0.0048","0.0216","0.0450","0.0076"],["1.36","2.38","1.58","1.25","3.91","2.10","2.01","2.20","3.53","2.06","6.43","1.66","2.16","3.81","4.20","3.75","4.02","5.04","1.55","2.22","2.53","1.70","4.58","3.51","2.08","4.48","4.02","1.41","1.11","1.11","3.38","4.87","0.74"],["1.09","1.72","2.14","0.36","2.02","0.53","0.80","1.00","1.30","0.65","2.67","0.79","0.51","0.60","1.26","1.31","1.27","1.90","0.43","0.43","0.49","0.79","1.44","1.19","0.91","1.73","1.55","0.45","0.50","0.57","1.44","3.97","0.90"],["7.4e-01","4.2e-01","7.8e-01","4.8e-01","1.5e-01","3.9e-02","2.0e-01","2.3e-01","5.4e-02","1.1e-01","4.4e-02","3.9e-01","2.3e-02","9.8e-06","1.5e-02","3.7e-02","1.6e-02","3.4e-02","2.1e-01","6.1e-03","1.8e-03","3.7e-01","2.0e-02","3.9e-02","2.3e-01","4.4e-02","5.1e-02","3.6e-01","8.3e-01","8.5e-01","1.0e-01","3.3e-01","7.7e-01"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>Disease<\/th>\n      <th>Category<\/th>\n      <th>Prop._SNPs<\/th>\n      <th>Prop._h2<\/th>\n      <th>Prop._h2_std_error<\/th>\n      <th>Enrichment<\/th>\n      <th>Enrichment_std_error<\/th>\n      <th>Enrichment_p<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"scrollX":true,"keys":true,"pageLength":3,"order":[],"autoWidth":false,"orderClasses":false,"lengthMenu":[3,10,25,50,100]}},"evals":[],"jsHooks":[]}</script>
+<pre class="r"><code>DT::datatable(format(result_sLDSC[,1:8], digits = 2), options = list(scrollX = TRUE, keys = TRUE, pageLength = length(annot_list)),rownames = F,
+              caption = &#39;Table 2. BaselineLD v1.1&#39;)</code></pre>
+<div id="htmlwidget-7e0b3ed5babea1e3ec54" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-7e0b3ed5babea1e3ec54">{"x":{"filter":"none","caption":"<caption>Table 2. BaselineLD v1.1<\/caption>","data":[["Asthma","Asthma","Asthma","BMI","BMI","BMI","CAD","CAD","CAD","HDL","HDL","HDL","Height","Height","Height","IBD","IBD","IBD","Intelligence","Intelligence","Intelligence","LDL","LDL","LDL","RA","RA","RA","Schizophrenia","Schizophrenia","Schizophrenia","T2D","T2D","T2D"],["MOLM13","MONO-MAC-6","NOMO-1","MOLM13","MONO-MAC-6","NOMO-1","MOLM13","MONO-MAC-6","NOMO-1","MOLM13","MONO-MAC-6","NOMO-1","MOLM13","MONO-MAC-6","NOMO-1","MOLM13","MONO-MAC-6","NOMO-1","MOLM13","MONO-MAC-6","NOMO-1","MOLM13","MONO-MAC-6","NOMO-1","MOLM13","MONO-MAC-6","NOMO-1","MOLM13","MONO-MAC-6","NOMO-1","MOLM13","MONO-MAC-6","NOMO-1"],["0.0151","0.0113","0.0084","0.0151","0.0113","0.0084","0.0151","0.0113","0.0084","0.0151","0.0113","0.0084","0.0151","0.0113","0.0084","0.0151","0.0113","0.0084","0.0151","0.0113","0.0084","0.0151","0.0113","0.0084","0.0151","0.0113","0.0084","0.0151","0.0113","0.0084","0.0151","0.0113","0.0084"],["0.0205","0.0269","0.0133","0.0189","0.0444","0.0177","0.0303","0.0250","0.0296","0.0310","0.0729","0.0139","0.0325","0.0431","0.0353","0.0564","0.0456","0.0423","0.0233","0.0251","0.0213","0.0255","0.0519","0.0295","0.0314","0.0507","0.0338","0.0213","0.0125","0.0093","0.0510","0.0552","0.0062"],["0.0165","0.0195","0.0180","0.0054","0.0229","0.0045","0.0120","0.0114","0.0109","0.0097","0.0303","0.0067","0.0076","0.0069","0.0106","0.0197","0.0144","0.0160","0.0065","0.0049","0.0041","0.0119","0.0163","0.0100","0.0137","0.0196","0.0130","0.0068","0.0056","0.0048","0.0216","0.0450","0.0076"],["1.36","2.38","1.58","1.25","3.91","2.10","2.01","2.20","3.53","2.06","6.43","1.66","2.16","3.81","4.20","3.75","4.02","5.04","1.55","2.22","2.53","1.70","4.58","3.51","2.08","4.48","4.02","1.41","1.11","1.11","3.38","4.87","0.74"],["1.09","1.72","2.14","0.36","2.02","0.53","0.80","1.00","1.30","0.65","2.67","0.79","0.51","0.60","1.26","1.31","1.27","1.90","0.43","0.43","0.49","0.79","1.44","1.19","0.91","1.73","1.55","0.45","0.50","0.57","1.44","3.97","0.90"],["7.4e-01","4.2e-01","7.8e-01","4.8e-01","1.5e-01","3.9e-02","2.0e-01","2.3e-01","5.4e-02","1.1e-01","4.4e-02","3.9e-01","2.3e-02","9.8e-06","1.5e-02","3.7e-02","1.6e-02","3.4e-02","2.1e-01","6.1e-03","1.8e-03","3.7e-01","2.0e-02","3.9e-02","2.3e-01","4.4e-02","5.1e-02","3.6e-01","8.3e-01","8.5e-01","1.0e-01","3.3e-01","7.7e-01"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>Disease<\/th>\n      <th>Category<\/th>\n      <th>Prop._SNPs<\/th>\n      <th>Prop._h2<\/th>\n      <th>Prop._h2_std_error<\/th>\n      <th>Enrichment<\/th>\n      <th>Enrichment_std_error<\/th>\n      <th>Enrichment_p<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"scrollX":true,"keys":true,"pageLength":3,"order":[],"autoWidth":false,"orderClasses":false,"lengthMenu":[3,10,25,50,100]}},"evals":[],"jsHooks":[]}</script>
 <pre class="r"><code>ggplot_enrichment(result_sLDSC, title = &quot;&quot;)</code></pre>
 <p><img src="figure/sldsc.Rmd/plots-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-plots-1">
+Past versions of plots-1.png
+</button>
+</p>
+<div id="fig-plots-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/cdu8/m6A_human_cells_ldsc/blob/bc407dd6317487c9155b6ac2b484086237ef3e91/docs/figure/sldsc.Rmd/plots-1.png" target="_blank">bc407dd</a>
+</td>
+<td>
+cdu8
+</td>
+<td>
+2020-08-06
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>ggplot_log2_enrichment(result_sLDSC, title = &quot;&quot;)</code></pre>
 <p><img src="figure/sldsc.Rmd/plots-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-plots-2">
+Past versions of plots-2.png
+</button>
+</p>
+<div id="fig-plots-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/cdu8/m6A_human_cells_ldsc/blob/bc407dd6317487c9155b6ac2b484086237ef3e91/docs/figure/sldsc.Rmd/plots-2.png" target="_blank">bc407dd</a>
+</td>
+<td>
+cdu8
+</td>
+<td>
+2020-08-06
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
